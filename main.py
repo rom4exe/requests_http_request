@@ -1,5 +1,7 @@
 import requests
 import os
+import datetime
+from datetime import datetime, timedelta
 
 def her_vx(her1, her2, her3):
     compared ={her1:'', her2:'', her3:''}
@@ -44,3 +46,24 @@ if __name__ == '__main__':
     token = ""
     uploader = YaUploader(token)
     result = uploader.upload(path_to_file)
+
+
+class questions:
+    def __init__(self, tag):
+        self.tag = tag
+
+    def period(self, last_days):
+        dt_now = datetime.today().strftime("%Y-%m-%d")
+        d = (datetime.today() - timedelta(days=last_days)).strftime("%Y-%m-%d")
+        url = "https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow"
+        param = {'fromdate': d, 'todate': dt_now, 'tagged': self.tag}
+        respons = requests.get(url, params=param) #headers=headers, params=param
+        data = respons.json()
+        for i in data['items']:
+            print(i['title'])
+        return
+
+if __name__ == '__main__':
+    print('ЗД3:')
+    que = questions('Python')
+    result = que.period(2)
